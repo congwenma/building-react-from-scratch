@@ -12,6 +12,7 @@ const UPDATE_TYPES = {
   REMOVE: 3,
 };
 
+// NOTE: returns action-like objects. `type` defines the action name
 const OPERATIONS = {
   insert(component, node, afterNode) {
     return {
@@ -40,6 +41,8 @@ const OPERATIONS = {
   },
 };
 
+// NOTE: gets all children into a flattened context:
+// NOTE:   { .0.0: element1, .1.0: element2 }
 function flattenChildren(children) {
   let flattenedChildren = {};
   traverseAllChildren(
@@ -51,8 +54,10 @@ function flattenChildren(children) {
   return flattenedChildren;
 }
 
+// WARN: what is react doing!?
 // In React we do this in an injection point, allowing MultiChild to be used
 // across renderers. We don't do that here to reduce overhead.
+// NOTE: actually processing `OPERATION` objects
 function processQueue(parentNode, updates) {
   updates.forEach(update => {
     switch (update.type) {
@@ -111,7 +116,9 @@ class MultiChild {
     ChildReconciler.unmountChildren(this._renderedChildren);
   }
 
+  // NOTE: @params - [<Element>]
   updateChildren(nextChildren) {
+    // NOTE: this is previously rendered[<Components>]
     let prevRenderedChildren = this._renderedChildren;
 
     let mountImages = [];
@@ -119,6 +126,7 @@ class MultiChild {
 
     let nextRenderedChildren = flattenChildren(nextChildren);
 
+    // NOTE: updates `removedNodes` so that we can remove these later.
     ChildReconciler.updateChildren(
       prevRenderedChildren,
       nextRenderedChildren,
@@ -132,6 +140,7 @@ class MultiChild {
     // inserted, and which are getting removed. Luckily, the removal list was
     // already determined by the ChildReconciler.
 
+    // WARN: bookmark
     // We'll store a serious of update operations here.
     let updates = [];
 
@@ -145,7 +154,9 @@ class MultiChild {
 
       // If the are identical, record this as an update. We might have inserted
       // or removed nodes.
+      // NOTE: if component vs component comparison
       if (prevChild === nextChild) {
+        // WARN: not understanding what this `move` OPERATION is doing (shouldn't this be an update if its same component?), defering to place wehre `updates`<Array> is being consumed
         // We don't actually need to move if moving to a lower index. Other
         // operations will ensure the end result is correct.
         if (prevChild._mountIndex < lastIndex) {
@@ -172,6 +183,7 @@ class MultiChild {
         nextMountIndex++;
       }
 
+      // NOTE: used as `afterNode` by `OPERATIONS`, not sure what this keep track is accomplishing other than maybe order
       lastPlacedNode = nextChild._domNode;
     });
 
@@ -185,6 +197,7 @@ class MultiChild {
       );
     });
 
+    // NOTE: updates is a list of `OPERATIONS`
     processQueue(this._domNode, updates);
 
     this._renderedChildren = nextRenderedChildren;

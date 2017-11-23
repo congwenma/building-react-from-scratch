@@ -13,6 +13,8 @@ let rootID = 1;
 // Used to track root instances.
 const instancesByRootID = {};
 
+
+// NOTE: checks if we this node is already rendered as root
 function isRoot(node) {
   if (node.dataset[ROOT_KEY]) {
     return true;
@@ -21,6 +23,7 @@ function isRoot(node) {
 }
 
 function render(element, node) {
+  // TODO: learn render debugger
   assert(Element.isValidElement(element));
 
   // First check if we've already rendered into this node.
@@ -34,6 +37,7 @@ function render(element, node) {
 }
 
 function mount(element, node) {
+  // NOTE: ?! what is this doing? `dataset`: sets data-dlthm-root-id="1" by using DOMNode.dataset api
   // Mark this node as a root.
   node.dataset[ROOT_KEY] = rootID;
 
@@ -41,6 +45,7 @@ function mount(element, node) {
   // `Component`s being rendered at the root.
   let component = instantiateComponent(element);
 
+  // NOTE: stores the component or <wrapperInstance>
   instancesByRootID[rootID] = component;
 
   // This will return a DOM node. React does more work here to determine if we're remounting

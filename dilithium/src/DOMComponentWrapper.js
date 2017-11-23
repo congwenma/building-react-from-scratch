@@ -5,6 +5,7 @@ const DOM = require('./DOM');
 const assert = require('./assert');
 
 class DOMComponentWrapper extends MultiChild {
+  // NOTE: - params { object } - { type: <String, Component subclass>, props: <Object>
   constructor(element) {
     super();
     this._currentElement = element;
@@ -25,6 +26,7 @@ class DOMComponentWrapper extends MultiChild {
 
     this._updateDOMProperties({}, this._currentElement.props);
 
+    // BETTER: only pass in `this._currentElement.props.children`
     this._createInitialDOMChildren(this._currentElement.props);
 
     return el;
@@ -76,7 +78,7 @@ class DOMComponentWrapper extends MultiChild {
     if (nextType === 'undefined') {
       return;
     }
-
+    // NOTE: Core, everything above are precondition checks
     // Much like the initial step, handline text differently than elements.
     if (nextType === 'string' || nextType === 'number') {
       this._domNode.textContent = nextProps.children;
@@ -85,6 +87,7 @@ class DOMComponentWrapper extends MultiChild {
     }
   }
 
+  // NOTE: handles updating(by that it means removing and adding) DOM props
   _updateDOMProperties(prevProps, nextProps) {
     let styleUpdates = {};
 
@@ -93,9 +96,11 @@ class DOMComponentWrapper extends MultiChild {
       // We're updating or adding a value, which we'll catch in the next loop so
       // we can skip here. That means the only props remaining will be removals.
       if (nextProps.hasOwnProperty(prop) || prevProps[prop] == null) {
+        // NOTE: if nextProp has the said prop (hence it must be updating the value) OR if this prop is null/undefined previously.
         return;
       }
 
+      // NOTE: ?! how do you know there are NO new ones, (seems like you are just readding them later)
       // Unset all previous styles since we know there are no new ones.
       if (prop === 'style') {
         Object.keys(prevProps[prop]).forEach(style => {
@@ -122,11 +127,13 @@ class DOMComponentWrapper extends MultiChild {
       if (prop === 'style') {
         // Update carefully. We need to remove old styles and add new ones
         if (prevValue) {
+          // NOTE: remove if `nextValue.false?` (is actually `nextStyle`) or next value didn't specify the current `styleAttr`
           Object.keys(prevValue).forEach(style => {
             if (!nextValue || !nextValue.hasOwnProperty(style)) {
               styleUpdates[style] = '';
             }
           });
+          // NOTE: replace if different
           Object.keys(nextValue).forEach(style => {
             if (prevValue[style] !== nextValue[style]) {
               styleUpdates[style] = nextValue[style];

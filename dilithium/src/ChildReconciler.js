@@ -28,9 +28,11 @@ function instantiateChildren(children) {
   return childInstances;
 }
 
+// NOTE: updateChildren compares prevChildren and nextChildren and update the component or removes it
+// WARN: not fully understood, will comeback
 function updateChildren(
-  prevChildren, // Instances, as created above
-  nextChildren, // Actually elements
+  prevChildren, // TODO: Instances of Components, as created above
+  nextChildren, // TODO: Actually elements, should be called nextChildElements
   mountImages,
   removedChildren,
 ) {
@@ -38,9 +40,11 @@ function updateChildren(
   // React skips this to avoid extraneous objects.
   prevChildren = prevChildren || {};
 
+  // NOTE: below
   // Loop over our new children and determine what is being updated, removed,
   // and created.
   Object.keys(nextChildren).forEach(childKey => {
+    // NOTE: grabs { prevComponent, prevElement, and nextElement} respectively
     let prevChild = prevChildren[childKey];
     let prevElement = prevChild && prevChild._currentElement;
     let nextElement = nextChildren[childKey];
@@ -71,9 +75,11 @@ function updateChildren(
     }
   });
 
+  // NOTE: below
   // Last but not least, remove the old children which no longer have any presense.
   Object.keys(prevChildren).forEach(childKey => {
     // debugger;
+    // NOTE: if nextChildren has no such childKey from prevChildren (meaning if its removed), set the domNode onto `removedChildren` removedChildren['0.1']` and unmount the prevChild <Component>
     if (!nextChildren.hasOwnProperty(childKey)) {
       prevChild = prevChildren[childKey];
       removedChildren[childKey] = prevChild._domNode;

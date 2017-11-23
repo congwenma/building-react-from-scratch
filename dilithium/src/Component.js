@@ -18,6 +18,7 @@ class Component {
     assert(typeof this.render === 'function');
   }
 
+  // NOTE: sets `_pendingState` to the targeted state we want to get into
   setState(partialState) {
     // React uses a queue here to allow batching.
     this._pendingState = partialState;
@@ -43,6 +44,7 @@ class Component {
     // Actually instantiate the rendered element.
     let renderedComponent = instantiateComponent(renderedElement);
 
+    // NOTE: stores reference to the renderedComponent <could be DOMComponentWrapper>
     this._renderedComponent = renderedComponent;
 
     // Generate markup for the child & effectively recurse!
@@ -62,7 +64,13 @@ class Component {
     this.updateComponent(this._currentElement, nextElement);
   }
 
+  // NOTE: actually update of the component,
+  // NOTE:  @schema -> element: { type: function/string/we, props: {...} }
+  // NOTE:  @sequence ->
+  // NOTE:    componentWillReceiveProps > shouldComponentUpdate >
+  // NOTE:    componentWillUpdate > !?shouldUpdateComponent > Update
   updateComponent(prevElement, nextElement) {
+    // NOTE: here (dilithium) its always true, b/c of `@performUpdateIfNecessary`
     // This is a props updates due to a re-render from the parent.
     if (prevElement !== nextElement) {
       // React would call componentWillReceiveProps here
@@ -73,17 +81,21 @@ class Component {
 
     // React would call componentWillUpdate here
 
+    // NOTE: actually updating, setting `_currentElement`, `props`, `state`, unset `_pendingState`
     // Update instance data
     this._currentElement = nextElement;
     this.props = nextElement.props;
     this.state = this._pendingState;
     this._pendingState = null;
 
+    // WARN: "React has a wrapper instance, which complicates the logic" how so?
     // React has a wrapper instance, which complicates the logic. We'll do
     // something simplified here.
+    // NOTE: maybe `@_renderedComponent` is the previous element, and will be set to `nextRenderedComponent` once this function completes
     let prevRenderedElement = this._renderedComponent._currentElement;
     let nextRenderedElement = this.render();
 
+    // NOTE: here in `shouldUpdateComponent` we are just briefly checking if the type of the element are same
     // We check if we're going to update the existing rendered element or if
     // we need to blow away the child tree and start over.
     if (shouldUpdateComponent(prevRenderedElement, nextRenderedElement)) {

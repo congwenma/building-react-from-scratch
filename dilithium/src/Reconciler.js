@@ -16,6 +16,7 @@ function unmountComponent(component, node) {
   component.unmountComponent();
 }
 
+// WARN: what are we saving!?
 function receiveComponent(component, element) {
   // Shortcut! We won't do anythign if the next element is the same as the
   // current one. This is unlikely in normal JSX usage, but it an optimization
@@ -29,6 +30,7 @@ function receiveComponent(component, element) {
   component.receiveComponent(element);
 }
 
+// NOTE: requested from UpdateQueue.enqueueSetState
 function performUpdateIfNecessary(component) {
   component.performUpdateIfNecessary();
 }
