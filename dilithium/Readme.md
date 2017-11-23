@@ -21,3 +21,9 @@ This builds a standalone browser version. It wasn't really tested that way and y
 ## License
 
 The code here is based on React and thus retains React's BSD license.
+
+
+## Testing done by jest
+goto `chrome://inspect` and look under `Remote Target` section
+otherwise follow directions on
+http://facebook.github.io/jest/docs/en/troubleshooting.html

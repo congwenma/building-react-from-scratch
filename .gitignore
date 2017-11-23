@@ -1,3 +1,4 @@
 node_modules
 dilithium/build
 demo/bundle.js
+*-lock.json

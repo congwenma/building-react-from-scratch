@@ -2,7 +2,11 @@
   "main": "dilithium",
   "scripts": {
     "build": "webpack --progress --colors",
-    "watch": "webpack --progress --colors --watch"
+    "watch": "webpack --progress --colors --watch",
+    "test": "jest",
+    "live": "find src | entr jest",
+    "testCov": "npm run test -- --maxWorkers=4 --coverage",
+    "testd": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand"
   },
   "dependencies": {
     "babel-core": "^6.13.2",
@@ -16,5 +20,30 @@
     "plugins": [
       "transform-class-properties"
     ]
+  },
+  "jest": {
+    "verbose": false,
+    "collectCoverage": false,
+    "modulePaths": [
+      "<rootDir>/src/"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!**/node_modules/**"
+    ],
+    "testPathIgnorePatterns": [],
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.jsx?$",
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text"
+    ],
+    "setupFiles": [],
+    "globals": {}
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "jest": "^21.2.1"
   }
 }
