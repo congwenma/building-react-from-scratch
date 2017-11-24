@@ -1,31 +1,58 @@
-import Component from 'Component'
+// NOTE: need this line to do some setups uch as injecting DOMComponentWrapper, otherwise not important
+import Dilithium from '../Dilithium'
 
+import Component from 'Component'
+import Element from 'Element'
+const { createElement } = Element
+
+let testInst = null
 class Test extends Component {
-  render() { }
+  constructor(props) {
+    super(props)
+    testInst = this
+  }
+  render() {
+    const { counter } = this.state || {}
+    // return { type: 'div', children: [] }
+    return createElement("div", null, // type // props,
+      // children
+      createElement("h1", null, this.props.name), createElement("span", null, counter ? `counter: ${counter}` : ""));
+  }
 }
 
 describe('Component', () => {
-  const name = 'test component'
-  let component
+  const name = 'hello world'
   beforeEach(() => {
-    component = new Test({ name });
+    document.body.innerHTML = `<div id="app"></div>`;
+    Dilithium.render(
+      createElement(Test, { name }),
+      document.getElementById('app')
+    );
   })
 
   describe('constructor', () => {
     it("sets up props from the constructor", () => {
-      expect(component.props).toEqual({ name });
+      expect(testInst.props).toEqual({ name });
     });
   })
 
   describe('setState', () => {
     let performUpdateIfNecessarySpy
     beforeEach(() => {
-      performUpdateIfNecessarySpy = jest.spyOn(component, "performUpdateIfNecessary")
+      performUpdateIfNecessarySpy = jest.spyOn(testInst, "performUpdateIfNecessary");
     })
 
     it('triggers change', () => {
-      component.setState({ counter: 1 })
+      const appDiv = document.getElementById("app");
+      // console.log(document.body.innerHTML)
+      expect(appDiv.innerHTML).toBe(`
+        <div><h1>hello world</h1><span></span></div>
+      `.trim());
+      testInst.setState({ counter: 1 });
       expect(performUpdateIfNecessarySpy).toHaveBeenCalled()
+      expect(appDiv.innerHTML).toBe(`
+        <div><h1>hello world</h1><span>counter: 1</span></div>
+      `.trim())
     })
   })
 })

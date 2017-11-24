@@ -6,6 +6,7 @@ const HostComponent = require('./HostComponent');
 
 // construct the component and wraps it in `wrapperInstance` and returns it
 function instantiateComponent(element) {
+  // ADDED: console.warn(element)
   assert(Element.isValidElement(element));
 
   let type = element.type;

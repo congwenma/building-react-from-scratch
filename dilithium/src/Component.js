@@ -81,7 +81,7 @@ class Component {
 
     // React would call componentWillUpdate here
 
-    // NOTE: actually updating, setting `_currentElement`, `props`, `state`, unset `_pendingState`
+    // NOTE: actually updating, setting `_currentElement`, `props`, `state`, unset `_pendigState`
     // Update instance data
     this._currentElement = nextElement;
     this.props = nextElement.props;

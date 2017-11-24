@@ -5,6 +5,7 @@ function createElement(type, config, children) {
   // props off of this object (keys, refs).
   let props = Object.assign({}, config);
 
+  // WARN: confusing, this only checks if there is a third parameter passed in, if so, `childCount === 1`
   // Build props.children. We'll make it an array if we have more than 1.
   let childCount = arguments.length - 2;
   if (childCount === 1) {
