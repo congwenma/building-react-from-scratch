@@ -1,7 +1,5 @@
-// NOTE: need this line to do some setups uch as injecting DOMComponentWrapper, otherwise not important
-import Dilithium from '../Dilithium'
-
 import Component from 'Component'
+import { render } from "Mount";
 import Element from 'Element'
 const { createElement } = Element
 
@@ -24,19 +22,19 @@ describe('Component', () => {
   const name = 'hello world'
   beforeEach(() => {
     document.body.innerHTML = `<div id="app"></div>`;
-    Dilithium.render(
+    render(
       createElement(Test, { name }),
       document.getElementById('app')
-    );
+    )
   })
 
-  describe('constructor', () => {
+  describe('.constructor', () => {
     it("sets up props from the constructor", () => {
       expect(testInst.props).toEqual({ name });
     });
   })
 
-  describe('setState', () => {
+  describe('#setState', () => {
     let performUpdateIfNecessarySpy
     beforeEach(() => {
       performUpdateIfNecessarySpy = jest.spyOn(testInst, "performUpdateIfNecessary");

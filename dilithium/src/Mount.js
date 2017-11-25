@@ -11,8 +11,7 @@ const ROOT_KEY = 'dlthmRootId';
 let rootID = 1;
 
 // Used to track root instances.
-const instancesByRootID = {};
-
+const instancesByRootID = {}; // exported for testing
 
 // NOTE: checks if we this node is already rendered as root
 function isRoot(node) {
@@ -104,4 +103,8 @@ function unmountComponentAtNode(node) {
 module.exports = {
   render,
   unmountComponentAtNode,
+
+  // NOTE: export for testing purposes
+  ROOT_KEY,
+  instancesByRootID
 };
