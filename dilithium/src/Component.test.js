@@ -1,6 +1,9 @@
 import Component from 'Component'
-import { render } from "Mount";
+import { render, unmountComponentAtNode } from "Mount"
 import Element from 'Element'
+import Reconciler from 'Reconciler'
+import DOMComponentWrapper from "DOMComponentWrapper"
+
 const { createElement } = Element
 
 let testInst = null
@@ -27,6 +30,7 @@ describe('Component', () => {
       document.getElementById('app')
     )
   })
+  // afterEach(() => unmountComponentAtNode(document.getElementById('app')))
 
   describe('.constructor', () => {
     it("sets up props from the constructor", () => {
@@ -42,15 +46,37 @@ describe('Component', () => {
 
     it('triggers change', () => {
       const appDiv = document.getElementById("app");
-      // console.log(document.body.innerHTML)
       expect(appDiv.innerHTML).toBe(`
         <div><h1>hello world</h1><span></span></div>
       `.trim());
+
+      // here's the actual test
       testInst.setState({ counter: 1 });
       expect(performUpdateIfNecessarySpy).toHaveBeenCalled()
       expect(appDiv.innerHTML).toBe(`
         <div><h1>hello world</h1><span>counter: 1</span></div>
       `.trim())
+    })
+  })
+
+  describe('#mountComponent', () => {
+    let renderSpy
+    let reconcilerMountComponentSpy
+    beforeEach(() => {
+      jest.clearAllMocks();
+      renderSpy = jest.spyOn(testInst, 'render')
+      reconcilerMountComponentSpy = jest.spyOn(Reconciler, 'mountComponent')
+
+      expect(renderSpy).not.toHaveBeenCalled()
+      expect(reconcilerMountComponentSpy).not.toHaveBeenCalled();
+      testInst.mountComponent()
+    })
+
+    it('invokes `render`, Reconciler.mountComponent` and set `@_renderedComponent`', () => {
+      expect(renderSpy).toHaveBeenCalled();
+      expect(reconcilerMountComponentSpy).toHaveBeenCalled();
+      expect(testInst._renderedComponent).toBeDefined();
+      expect(testInst._renderedComponent.constructor).toBe(DOMComponentWrapper);
     })
   })
 })

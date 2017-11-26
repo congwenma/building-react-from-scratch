@@ -4,7 +4,8 @@ const Element = require('./Element');
 const assert = require('./assert');
 const HostComponent = require('./HostComponent');
 
-// construct the component and wraps it in `wrapperInstance` and returns it
+// NOTE: @param {element} - { type, props ...}
+// NOTE: @returns {componentInstance} - wraps component in `wrapperInstance` and returns it
 function instantiateComponent(element) {
   // ADDED: console.warn(element)
   assert(Element.isValidElement(element));
