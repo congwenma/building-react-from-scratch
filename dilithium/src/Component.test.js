@@ -72,6 +72,7 @@ describe('Component', () => {
       testInst.mountComponent()
     })
 
+    // NOTE: cannot separate this into multiple it statements, there are potential problems running the setup multiple times
     it('invokes `render`, Reconciler.mountComponent` and set `@_renderedComponent`', () => {
       expect(renderSpy).toHaveBeenCalled();
       expect(reconcilerMountComponentSpy).toHaveBeenCalled();
