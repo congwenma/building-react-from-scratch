@@ -12,6 +12,9 @@ function getComponentKey(component, index) {
   return index.toString(36);
 }
 
+// NOTE: @returns <Integer> !? count of all children?
+// NOTE: @side_effect - mutate `traverseContext` to contain key-value pairs of all children, e.g.
+// NOTE:    { .0.0: DOMComponentWrapper, .1.0: ColorSwatch, ... }
 function traverseAllChildren(children, callback, traverseContext) {
   return traverseAllChildrenImpl(children, '', callback, traverseContext);
 }

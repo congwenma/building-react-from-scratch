@@ -38,6 +38,7 @@ class ColorSwatch extends Dilithium.Component {
   }
 }
 
+debugger
 // window.addEventListener('click', () => {
   Dilithium.render(
     <CounterButton title="Hello World" />,

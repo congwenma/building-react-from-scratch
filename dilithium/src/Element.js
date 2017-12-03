@@ -1,5 +1,6 @@
 'use strict';
 
+// NOTE: @returns <Element> - { type, props }
 function createElement(type, config, children) {
   // Clone the passed in config (props). In React we move some special
   // props off of this object (keys, refs).
