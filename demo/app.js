@@ -8,6 +8,7 @@ class CounterButton extends Dilithium.Component {
     this.state = {count: 0};
     setInterval(() => {
       // TODO: learn by debugger;
+      debugger
       this.setState({count: this.state.count + 1});
     }, 100);
   }

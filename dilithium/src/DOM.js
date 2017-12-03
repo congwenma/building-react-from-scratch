@@ -34,7 +34,6 @@ function updateStyles(node, styles) {
 }
 
 function appendChild(node, child) {
-  debugger
   node.appendChild(child);
 }
 

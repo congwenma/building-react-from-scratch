@@ -154,7 +154,7 @@ class MultiChild {
 
       // If the are identical, record this as an update. We might have inserted
       // or removed nodes.
-      // NOTE: if component vs component comparison
+      // NOTE: component vs component comparison
       if (prevChild === nextChild) {
         // WARN: not understanding what this `move` OPERATION is doing (shouldn't this be an update if its same component?), defering to place wehre `updates`<Array> is being consumed
         // We don't actually need to move if moving to a lower index. Other
